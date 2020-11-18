@@ -1,6 +1,12 @@
 #!/bin/bash
 
-echo "Activating Universe"
-add-apt-repository universe
-echo "Installing Pip on Python3"
-apt install python3-pip
+echo "INSTALANDO --> UNIVERSE"
+add-apt-repository universe -y &
+echo "INSTALANDO --> PIP NO PYTHON3"
+apt install python3-pip -y &
+echo "INSTALANDO --> PYGAME"
+pip3 install pygame&
+echo "INSTALANDO --> GIT"
+apt install git -y 
+
+echo "CONCLUIDO"

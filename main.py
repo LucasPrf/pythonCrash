@@ -4,6 +4,7 @@ import sys
 import pygame
 from settings import Settings
 from ship import Ship
+from bullet import Bullet
 
 class AlienInvasion:
 	"""Main Window Calss"""
@@ -14,6 +15,7 @@ class AlienInvasion:
 		self.settings = Settings()
 		self.screen = pygame.display.set_mode((self.settings.screen_width,self.settings.screen_height))
 		self.ship = Ship(self)
+		self.bullets = pygame.sprite.Group()
 		pygame.display.set_caption("Alien Invasion")
 
 	def _check_events(self):
@@ -35,6 +37,8 @@ class AlienInvasion:
 			self.ship.mov_left = True
 		elif evt.key == pygame.K_ESCAPE:
 			sys.exit()
+		elif evt.key == pygame.K_SPACE:
+			self._fire_bullet()
 
 	def _check_keyup_evts(self,evt):
 		if evt.key == pygame.K_d:
@@ -46,13 +50,31 @@ class AlienInvasion:
 		"""Update the screen"""
 		self.screen.fill(self.settings.bg_color)
 		self.ship.blitme()
+		for bullet in self.bullets.sprites():
+			bullet.draw_bullet()
 		pygame.display.flip()
+
+	def _fire_bullet(self):
+		if len(self.bullets) < self.settings.bullets_allow:
+			new_bullet = Bullet(self)
+			self.bullets.add(new_bullet)
+
+	def _update_bullets(self):
+		self.bullets.update()
+
+		##remove bullets
+
+		for bullet in self.bullets.copy():
+			if bullet.rect.bottom <= 0:
+				self.bullets.remove(bullet)
+		print(len(self.bullets))	
 
 	def run_game(self):
 		"""Star the Main loop for Run the game"""
 		while True:
 			self._check_events()
 			self.ship.update()
+			self._update_bullets()		
 			self._update_screen()
 
 
